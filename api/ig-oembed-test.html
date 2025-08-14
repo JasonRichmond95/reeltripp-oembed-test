@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8" />
+<title>Instagram oEmbed Test — Reeltripp</title>
+<main style="max-width:760px;margin:48px auto;padding:0 16px;font-family:system-ui,Segoe UI,Roboto,sans-serif">
+<h1>Instagram oEmbed Test</h1>
+<p>This page calls our serverless API (<code>/api/ig-oembed</code>) and renders the returned HTML snippet.</p>
+
+<label for="igurl">Instagram Post URL</label>
+<input id="igurl" type="url" style="width:100%" value="https://www.instagram.com/p/Cx_______/">
+<button id="go" style="margin-top:8px">Embed</button>
+<div id="status" style="color:#555;margin-top:10px"></div>
+<div id="embed" style="margin-top:16px"></div>
+</main>
+
+<script>
+async function load(url){
+  document.getElementById('status').textContent='Loading…';
+  const r=await fetch('/api/ig-oembed?url='+encodeURIComponent(url));
+  const data=await r.json();
+  if(!r.ok){ document.getElementById('status').textContent='Error: '+(data?.error?.message||r.status); return; }
+  document.getElementById('status').textContent='';
+  document.getElementById('embed').innerHTML=data.html||'';
+  if(!window._igScriptLoaded){
+    const s=document.createElement('script'); s.async=true; s.src='https://www.instagram.com/embed.js';
+    s.onload=()=>{ window._igScriptLoaded=true; if(window.instgrm?.Embeds) window.instgrm.Embeds.process(); };
+    document.body.appendChild(s);
+  } else if(window.instgrm?.Embeds) { window.instgrm.Embeds.process(); }
+}
+document.getElementById('go').addEventListener('click',()=>{ const u=document.getElementById('igurl').value.trim(); if(u) load(u); });
+window.addEventListener('DOMContentLoaded',()=>{ const u=document.getElementById('igurl').value.trim(); if(u) load(u); });
+</script>
+</html>
