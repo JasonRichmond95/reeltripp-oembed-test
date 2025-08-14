@@ -1,28 +1,20 @@
-export default async function handler(req, res) {
-  try {
-    const { url } = req.query;
-    if (!url) return res.status(400).json({ error: 'Missing url' });
-
-    const appId = process.env.FB_APP_ID;
-    const appSecret = process.env.FB_APP_SECRET;
-    if (!appId || !appSecret) {
-      return res.status(500).json({ error: 'Server not configured' });
-    }
-
-    const endpoint = new URL('https://graph.facebook.com/v19.0/instagram_oembed');
-    endpoint.searchParams.set('url', url);
-    endpoint.searchParams.set('access_token', `${appId}|${appSecret}`);
-    endpoint.searchParams.set('omitscript', 'true');
-    endpoint.searchParams.set('maxwidth', '540');
-
-    const r = await fetch(endpoint, { headers: { Accept: 'application/json' } });
-    const data = await r.json();
-
-    if (!r.ok) return res.status(r.status).json({ error: data?.error || data });
-
-    res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate=43200');
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json({ error: 'Unexpected error' });
-  }
-}
+<!doctype html>
+<html lang="en"><meta charset="utf-8" />
+<title>Privacy Policy — Reeltripp</title>
+<main style="max-width:760px;margin:48px auto;padding:0 16px;font-family:system-ui,Segoe UI,Roboto,sans-serif">
+  <h1>Privacy Policy — Reeltripp</h1>
+  <p><em>Last updated: 14 August 2025</em></p>
+  <p>Reeltripp Pty Ltd (“Reeltripp”, “we”, “us”) operates a content discovery website featuring travel experiences and creator posts.</p>
+  <h3>What we collect</h3>
+  <ul><li>Basic site analytics (pages viewed, device/browser)</li><li>Information you submit (contact forms, email)</li><li>Embed metadata returned by providers (e.g., Instagram oEmbed HTML)</li></ul>
+  <h3>How we use data</h3>
+  <ul><li>Operate and improve our site</li><li>Display embedded posts (e.g., Instagram)</li><li>Respond to enquiries and maintain security</li></ul>
+  <h3>Third‑party services</h3>
+  <p>We use services that may set cookies or receive your IP/browser info when their content loads, including Meta/Instagram oEmbed, hosting/CDNs, and analytics.</p>
+  <h3>Cookies</h3><p>Control cookies via your browser settings.</p>
+  <h3>Retention</h3><p>We retain info as long as necessary for the purposes above or as required by law.</p>
+  <h3>Your choices</h3><p>Contact us to request access, correction, or deletion (subject to legal limits).</p>
+  <h3>Contact</h3>
+  <p>Reeltripp Pty Ltd — hello@reeltripp.com — Australia</p>
+</main>
+</html>
