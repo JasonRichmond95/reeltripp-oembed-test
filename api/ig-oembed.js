@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   try {
     const { url } = req.query;
     if (!url) return res.status(400).json({ error: 'Missing url' });
@@ -15,6 +15,7 @@ export default async function handler(req, res) {
     endpoint.searchParams.set('omitscript', 'true');
     endpoint.searchParams.set('maxwidth', '540');
 
+    // Node 18+ on Vercel has global fetch
     const r = await fetch(endpoint, { headers: { Accept: 'application/json' } });
     const data = await r.json();
 
@@ -25,5 +26,4 @@ export default async function handler(req, res) {
   } catch (e) {
     res.status(500).json({ error: 'Unexpected error' });
   }
-}
-
+};
